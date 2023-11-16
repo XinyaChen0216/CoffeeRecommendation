@@ -1,147 +1,125 @@
-package reviewApplication.tools;
+package recommendation.tools;
 
-import reviewApplication.dal.*;
-import reviewApplication.model.*;
-import reviewApplication.model.Restaurants.CuisineType;
-import java.sql.Date;
+import recommendation.dal.*;
+import recommendation.model.*;
+
 import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.util.Date;
+//import java.util.List;
 
-/**
- * main() runner, used for the app demo.
- * <p>
- * Instructions:
- * 1. Create a new MySQL schema and then run the CREATE TABLE statements from lecture:
- * http://goo.gl/86a11H.
- * 2. Update ConnectionManager with the correct user, password, and schema.
- */
+
 public class Inserter {
 
-    public static void main(String[] args) throws SQLException {
+	public static void main(String[] args) throws SQLException {
+		// DAO instances.
+		PersonsDao personsDao = PersonsDao.getInstance();
+		AdminsDao adminDao = AdminsDao.getInstance();
+		ProfessionalsDao professionalsDao = ProfessionalsDao.getInstance();
+		CoffeeLoversDao coffeeLoversDao = CoffeeLoversDao.getInstance();
 
-        // Create.
-        UsersDao usersDao = UsersDao.getInstance();
-        Users user = new Users("userName", "password", "firstname", "lastname", "firstName@yahoo.com", "0001112222");
-        usersDao.create(user);
-        
-        CreditCardsDao creditCardsDao = CreditCardsDao.getInstance();
-        CreditCards creditCard = new CreditCards((long)12345678, new Date(20250901), user);
-        creditCardsDao.create(creditCard);
+		
+		// INSERT objects from our model.
+		Persons person = new Persons("taylor", "425bdhgd!", "aaaa12@gmail.com", "4256888777");
+		person = personsDao.create(person);
+		Persons person1 = new Persons("black", "978fudhgd!", "bbbb12@gmail.com", "4256808077");
+		person1 = personsDao.create(person1);
+		Persons person2 = new Persons("joe", "9gn86dhgd!", "mmmm12@gmail.com", "4256959577");
+		person2 = personsDao.create(person2);
+		
+		Date date = new Date();
+		Admins admin = new Admins("taylor0", "42mthmfggd!", "aaaaa12@gmail.com", "4256888777", date);
+		admin = adminDao.create(admin);
+		Admins admin1 = new Admins("taylor1", "925bdhgd!", "aabb12@gmail.com", "4256888788", date);
+		admin1 = adminDao.create(admin1);
+		Admins admin2 = new Admins("taylor2", "926bdhgd!", "aacc12@gmail.com", "5256888788", date);
+		admin2 = adminDao.create(admin2);
+		
+		Professionals professional = new Professionals("black0", "978fudhgd!", "bbbbb12@gmail.com", "4256808077", 
+				true, 5, Professionals.StatusLevel.advanced);
+		professional = professionalsDao.create(professional);
+		Professionals professional1 = new Professionals("black1", "979fudhgd!", "bbbcc12@gmail.com", "4256808177", 
+				true, 3, Professionals.StatusLevel.intermediate);
+		professional1 = professionalsDao.create(professional1);
+		Professionals professional2 = new Professionals("black2", "97hetdhgd!", "bbbff12@gmail.com", "4256848177", 
+				true, 2, Professionals.StatusLevel.novice);
+		professional2 = professionalsDao.create(professional2);
+		
+		CoffeeLovers coffeeLover = new CoffeeLovers("joe0", "9gn86dhg74!", "mmghfm12@gmail.com", "4257959577", 5, 
+				CoffeeLovers.StatusLevel.advanced);
+		coffeeLover = coffeeLoversDao.create(coffeeLover);
+		CoffeeLovers coffeeLover1 = new CoffeeLovers("joe1", "9gnt3dhgd!", "mmmnfm12@gmail.com", "4256989577", 2, 
+				CoffeeLovers.StatusLevel.intermediate);
+		coffeeLover1 = coffeeLoversDao.create(coffeeLover1);
+		CoffeeLovers coffeeLover2 = new CoffeeLovers("joe2", "9gnerdhgd!", "mrnfm12@gmail.com", "4266989577", 1, 
+				CoffeeLovers.StatusLevel.novice);
+		coffeeLover2 = coffeeLoversDao.create(coffeeLover2);
+		
 
-        CompaniesDao companiesDao = CompaniesDao.getInstance();
-        Companies company = new Companies("companyName", "about");
-        companiesDao.create(company);
-        
-        RestaurantsDao restaurantsDao = RestaurantsDao.getInstance();
-        Restaurants restaurant = new Restaurants(1, "name", "description", "menu", "6am-6pm", true, CuisineType.AFRICAN, "streets1", "streets2", "city", "state", 98056, company);
-        restaurantsDao.create(restaurant);
-
-        SitDownRestaurantDao sitDownRestaurantDao = SitDownRestaurantDao.getInstance();
-        SitDownRestaurant sitDownRestaurant = new SitDownRestaurant(restaurant.getRestaurantId(), restaurant.getName(), restaurant.getDescription(), restaurant.getMenu(), restaurant.getHours(), restaurant.isActive(), restaurant.getCuisineType(), restaurant.getStreet1(), restaurant.getStreet2(), restaurant.getCity(), restaurant.getState(), restaurant.getZip(), restaurant.getCompnay(), 8);
-        sitDownRestaurantDao.create(sitDownRestaurant);
-
-        TakeOutRestaurantDao takeOutRestaurantDao = TakeOutRestaurantDao.getInstance();
-        TakeOutRestaurant takeOutRestaurant = new TakeOutRestaurant(restaurant.getRestaurantId(), restaurant.getName(), restaurant.getDescription(), restaurant.getMenu(), restaurant.getHours(), restaurant.isActive(), restaurant.getCuisineType(), restaurant.getStreet1(), restaurant.getStreet2(), restaurant.getCity(), restaurant.getState(), restaurant.getZip(), restaurant.getCompnay(), 1);
-        takeOutRestaurantDao.create(takeOutRestaurant);
- 
-        FoodCartRestaurantDao foodCartRestaurantsDao = FoodCartRestaurantDao.getInstance();
-        FoodCartRestaurant foodCartRestaurant = new FoodCartRestaurant(restaurant.getRestaurantId(), restaurant.getName(), restaurant.getDescription(), restaurant.getMenu(), restaurant.getHours(), restaurant.isActive(), restaurant.getCuisineType(), restaurant.getStreet1(), restaurant.getStreet2(), restaurant.getCity(), restaurant.getState(), restaurant.getZip(), restaurant.getCompnay(), true);    
-        foodCartRestaurantsDao.create(foodCartRestaurant);
-        
-        ReviewsDao reviewsDao = ReviewsDao.getInstance();
-        Reviews review = new Reviews(1, Timestamp.valueOf("2020-11-05"), "nice food", 9.8, user, restaurant);
-        reviewsDao.create(review);
-
-        RecommendationsDao recommendationsDao = RecommendationsDao.getInstance();
-        Recommendations recommendation = new Recommendations(1, user, restaurant);
-        recommendationsDao.create(recommendation);
-      
-        ReservationsDao reservationsDao = ReservationsDao.getInstance();
-        Reservations reservation = new Reservations(1, Timestamp.valueOf("2020-11-05"), Timestamp.valueOf("2022-10-01"), 5, user, restaurant);
-        reservationsDao.create(reservation);
-
- 
-        // Read
-        System.out.println(usersDao.getUserByUserName(user.getUserName()).toString());
-
-        
-        System.out.println(creditCardsDao.getCreditCardByCardNumber((long)123456).toString());
-        for(CreditCards creditCard1 : creditCardsDao.getCreditCardsByUserName(user.getUserName())){
-            System.out.println(creditCard1.toString());
+		// READ.
+		Persons persontest = personsDao.getPersonFromUserName("taylor");
+        if (persontest != null) {
+            System.out.println("Person fetched: " + persontest.getUserName());
+        } else {
+            System.out.println("Person not found.");
         }
         
-        
-        System.out.println(companiesDao.getCompanyByCompanyName("SUNSHINECOMPANY").toString());
-
-        
-        System.out.println(restaurantsDao.getRestaurantById(restaurant.getRestaurantId()).toString());
-        for(Restaurants restaurant1 : restaurantsDao.getRestaurantsByCompanyName(company.getCompanyName())){
-            System.out.println(restaurant1.toString());
-        }
-        for(Restaurants restaurant2 : restaurantsDao.getRestaurantsByCuisine(Restaurants.CuisineType.AFRICAN)){
-            System.out.println(restaurant2.toString());
-        }
-
-        
-        System.out.println(sitDownRestaurantDao.getSitDownRestaurantById(restaurant.getRestaurantId()).toString());
-        for(SitDownRestaurant restaurant3 : sitDownRestaurantDao.getSitDownRestaurantsByCompanyName(company.getCompanyName())){
-            System.out.println(restaurant3.toString());
+        Persons persontest2 = personsDao.getPersonFromUserName("taylor");
+        if (persontest2 != null) {
+        	persontest2 = personsDao.updatePhoneNumber(persontest2, "9999999999");
+            System.out.println("Person phone number updated: " + persontest2.getUserName());
+        } else {
+            System.out.println("Person not found for update.");
         }
         
+        Persons persontest3 = personsDao.getPersonFromUserName("taylor");
+        if (persontest3 != null) {
+            personsDao.delete(persontest3);
+            System.out.println("Person deleted: " + persontest3.getUserName());
+        } else {
+            System.out.println("Person not found for deletion.");
+        }
+		
         
-        System.out.println(foodCartRestaurantsDao.getFoodCartRestaurantById(restaurant.getRestaurantId()).toString());
-        for(FoodCartRestaurant restaurant4 : foodCartRestaurantsDao.getFoodCartRestaurantByCompanyName(company.getCompanyName())){
-            System.out.println(restaurant4.toString());
+		Admins admintest = adminDao.getAdminFromUserName("taylor0");
+        if (admintest != null) {
+            System.out.println("Admin fetched: " + admintest.getUserName());
+        } else {
+            System.out.println("Admin not found.");
+        }
+         
+        admin = adminDao.updatePhoneNumber(admin, "9999999999");
+        System.out.println("Admin phone number updated: " + admin.getUserName());
+         
+        adminDao.delete(admin);
+        System.out.println("Admin deleted: " + admin.getUserName());
+		
+        
+        Professionals professionaltest = professionalsDao.getProfessionalFromUserName("black0");
+        if (professionaltest != null) {
+            System.out.println("Professional fetched: " + professionaltest.getUserName());
+        } else {
+            System.out.println("Professional not found.");
         }
         
+        professional = professionalsDao.updatePhoneNumber(professional, "9999999999");
+        System.out.println("Professional phone number updated: " + professional.getUserName());
         
-        System.out.println(takeOutRestaurantDao.getTakeOutRestaurantById(restaurant.getRestaurantId()).toString());
-        for(TakeOutRestaurant restaurant5 : takeOutRestaurantDao.getTakeOutRestaurantByCompanyName(company.getCompanyName())){
-            System.out.println(restaurant5.toString());
-        }
-        
-        
-        System.out.println(reviewsDao.getReviewById(review.getReviewId()).toString());
-        for(Reviews review1 : reviewsDao.getReviewsByRestaurantId(restaurant.getRestaurantId())){
-            System.out.println(review1.toString());
-        }
-        for(Reviews review2 : reviewsDao.getReviewsByUserName(user.getUserName())){
-            System.out.println(review2.toString());
-        }
-
-        
-        System.out.println(recommendationsDao.getRecommendationById(recommendation.getRecommendationId()).toString());
-        for(Recommendations recommendation1 : recommendationsDao.getRecommendationsByUserName(user.getUserName())){
-          System.out.println(recommendation1.toString());
-        }
-        for(Recommendations recommendation2 : recommendationsDao.getRecommendationsByRestaurantId(restaurant.getRestaurantId())){
-          System.out.println(recommendation2.toString());
-        }
+        professionalsDao.delete(professional);
+        System.out.println("Professional deleted: " + professional.getUserName());
         
         
-        System.out.println(reservationsDao.getReservationById(reservation.getReservationId()).toString());
-        for(Reservations reservation1: reservationsDao.getReservationsByUserName(restaurant.getName())){
-            System.out.println(reservation1.toString());
-        }
-        for(Reservations reservation2: reservationsDao.getReservationsBySitDownRestaurantId(restaurant.getRestaurantId())){
-            System.out.println(reservation2.toString());
-        }
-
         
-        // UPDATE
-        System.out.println(creditCardsDao.updateExpiration(creditCard, new Date(20251010)).toString());
-        System.out.println(companiesDao.updateAbout(company, "new about").toString());
-
-        // DELETE.
-        usersDao.delete(user);
-        creditCardsDao.delete(creditCard);
-        companiesDao.delete(company);
-        restaurantsDao.delete(restaurant);
-        sitDownRestaurantDao.delete(sitDownRestaurant);
-        takeOutRestaurantDao.delete(takeOutRestaurant);
-        foodCartRestaurantsDao.delete(foodCartRestaurant);
-        reviewsDao.delete(review);
-        recommendationsDao.delete(recommendation);   
-        reservationsDao.delete(reservation);  
-    }
+        CoffeeLovers coffeeLovertest = coffeeLoversDao.getCoffeeLoverFromUserName("joe0");
+        if (coffeeLovertest != null) {
+            System.out.println("CoffeeLover fetched: " + coffeeLovertest.getUserName());
+        } else {
+            System.out.println("CoffeeLover not found.");
+        }
+        
+        coffeeLover = coffeeLoversDao.updatePhoneNumber(coffeeLover, "9999999999");
+        System.out.println("CoffeeLover phone number updated: " + coffeeLover.getUserName());
+        
+        coffeeLoversDao.delete(coffeeLover);
+        System.out.println("CoffeeLover deleted: " + coffeeLover.getUserName());
+	}
 }
